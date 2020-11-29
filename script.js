@@ -1,22 +1,16 @@
 const TelegramBot = require('node-telegram-bot-api');
-const bot = new TelegramBot("1494527830:AAF9YnFPKjTe1sCPBkiFH3Yw4FtswCHWrvU", { polling: true });
+const bot = new TelegramBot(process.env.BOT_APIKEY, { polling: true });
 const request = require('request');
-const http = require("http");
-const packageInfo = require('./package.json');
 const express = require('express');
 const app = express();
 
 require('dotenv').config();
 
 
-app.get('/', function (req, res) {
-    res.json({ version: packageInfo.version });
-});
-
 bot.onText(/\/movie (.+)/, (msg, match) => {
     let movie = match[1];
     let chatId = msg.chat.id;
-    request(`http://www.omdbapi.com/?apiKey=5ea7286b&t=${movie}`, (error, response, body) => {
+    request(`http://www.omdbapi.com/?apiKey=${process.env.BOT_APIKEY.OMDAPIKEY}=${movie}`, (error, response, body) => {
         if (!error && response.statusCode == 200) {
             bot.sendMessage(chatId, '_Looking for _' + movie + '...', { parse_mode: 'Markdown' })
                 .then((msg) => {
